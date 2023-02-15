@@ -343,6 +343,37 @@ Transform:
   m_Father: {fileID: 8796671994196821114}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2344809252043334863
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7081832874827807936}
+  m_Layer: 0
+  m_Name: ShipCOM
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7081832874827807936
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2344809252043334863}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8796671994196821114}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2724462824291990252
 GameObject:
   m_ObjectHideFlags: 0
@@ -1735,6 +1766,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8796671994196821114}
+  - component: {fileID: 3299179539253334222}
+  - component: {fileID: 5933429406246765508}
   m_Layer: 0
   m_Name: PlayerShip
   m_TagString: Untagged
@@ -1760,9 +1793,46 @@ Transform:
   - {fileID: 5107896830309430393}
   - {fileID: 6477464583633015435}
   - {fileID: 6477464582679193589}
+  - {fileID: 7081832874827807936}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &3299179539253334222
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8169492610986729152}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &5933429406246765508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8169492610986729152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34d29f698ca00bc4b92f1b05bfa0672b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AllEngines: []
+  LiftEngines: []
+  LeftEgnines: []
+  RightEngines: []
+  FrontEngines: []
+  BackEgnines: []
+  rb: {fileID: 0}
+  CenterOfMass: {x: 0, y: 0, z: 0}
 --- !u!1 &8451071361988298321
 GameObject:
   m_ObjectHideFlags: 0

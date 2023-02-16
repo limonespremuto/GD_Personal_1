@@ -11,7 +11,10 @@ public class EngineBase : MonoBehaviour, IEngine
 
     [Header("setup")]
     protected Rigidbody rb;
-    
+
+    protected Vector3 DesiredVectorThrust = Vector3.zero;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,14 +26,14 @@ public class EngineBase : MonoBehaviour, IEngine
     {
 
     }
+    public void ApplyForceVector()
+    {
+        
+    }
 
     public void GetNewVector(Vector3 inputVector)
     {
-        throw new System.NotImplementedException();
-    }
-    public void ApplyForceVector()
-    {
-        throw new System.NotImplementedException();
+        
     }
 }
 

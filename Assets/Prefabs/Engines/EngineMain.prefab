@@ -128,6 +128,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ce4f0321f5e7648a52d2891e6b61a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ThrusterPower: 10
+  ThrusterPower: 100
   CurrentPowerMP: 1
   EvenPowerMP: 0
+  MaxCorrectionDistance: 15
+  CorrectionPowerMP: 0.2
+  CutOffAngle: 45

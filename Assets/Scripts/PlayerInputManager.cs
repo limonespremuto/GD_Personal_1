@@ -20,10 +20,14 @@ public class PlayerInputManager : MonoBehaviour
     //Internal variables
     private float EvenPowerMP;
 
+    private void Awake()
+    {
+        rb.centerOfMass = CenterOfMass.position;
+    }
     // Start is called before the first frame update
     void Start()
     {
-        rb.centerOfMass = CenterOfMass.position;
+        
     }
 
     // Update is called once per frame
@@ -31,6 +35,12 @@ public class PlayerInputManager : MonoBehaviour
     {
         EvenPowerMP = CalculateLiftPowerMP();
         ApplyEvenPower();
+    }
+
+    private void FixedUpdate()
+    {
+        InputUpdate();
+        ThrustEngine();
     }
 
     float CalculateLiftPowerMP()
@@ -56,6 +66,49 @@ public class PlayerInputManager : MonoBehaviour
         foreach (EngineLift engine in LiftEngines)
         {
             engine.EvenPowerMP = EvenPowerMP;
+        }
+    }
+
+    private void InputUpdate()
+    {
+        
+        if (Input.GetAxis("Vertical") != 0f)
+        {
+            ApplyEngineVector(Vector3.forward * Input.GetAxis("Vertical"), FrontEngines);
+            ApplyEngineVector(Vector3.forward * Input.GetAxis("Vertical"), BackEgnines);
+        }
+
+        if (Input.GetAxis("Horizontal") != 0f)
+        {
+            ApplyEngineVector(Vector3.right * Input.GetAxis("Horizontal"), FrontEngines);
+            ApplyEngineVector(Vector3.right * Input.GetAxis("Horizontal"), BackEgnines);
+        }
+
+        if (Input.GetAxis("Steer") != 0f)
+        {
+            // frontal engine get input towards right back to left
+            ApplyEngineVector(Vector3.right * Input.GetAxis("Steer"), FrontEngines);
+            ApplyEngineVector(Vector3.left * Input.GetAxis("Steer"), BackEgnines);
+
+            // same whit left and right engines but whit forward and back
+            ApplyEngineVector(Vector3.forward * Input.GetAxis("Steer"), LeftEgnines);
+            ApplyEngineVector(Vector3.back * Input.GetAxis("Steer"), RightEngines);
+        }
+    }
+    private void ApplyEngineVector(Vector3 vector3, EngineBase[] Engines)
+    {
+        foreach (IEngine Engine in Engines)
+        {
+            Engine.GetNewVector(vector3);
+            //Debug.Log(vector3);
+        }
+    }
+
+    private void ThrustEngine()
+    {
+        foreach (IEngine engine in AllEngines)
+        {
+            engine.ApplyForceVector();
         }
     }
 }

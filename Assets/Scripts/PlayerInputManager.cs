@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class PlayerInputManager : MonoBehaviour
 {
+    [SerializeField, Tooltip("Internal")]
+    private float targetHeight;
+    [SerializeField] private float MaxHeight;
+
+    [Header("Stabilizer")]
+    public float stability = 0.3f;
+    public float speed = 2.0f;
+
+
     public EngineBase[] AllEngines;
     public EngineBase[] LiftEngines;
 
@@ -23,24 +32,26 @@ public class PlayerInputManager : MonoBehaviour
     private void Awake()
     {
         rb.centerOfMass = CenterOfMass.position;
+        targetHeight = CenterOfMass.position.y;
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        EvenPowerMP = CalculateLiftPowerMP();
-        ApplyEvenPower();
     }
 
     private void FixedUpdate()
     {
         InputUpdate();
         ThrustEngine();
+        EvenPowerMP = CalculateLiftPowerMP();
+        ApplyEvenPower();
+        StabilizeShip();
     }
 
     float CalculateLiftPowerMP()
@@ -57,7 +68,7 @@ public class PlayerInputManager : MonoBehaviour
         RequiredPower = rb.mass * -Physics.gravity.y;
         //Debug.Log(RequiredPower);
 
-        EngineEvenMP = Mathf.Clamp01 (RequiredPower / TotalPower);
+        EngineEvenMP = Mathf.Clamp01(RequiredPower / TotalPower);
         return EngineEvenMP;
     }
 
@@ -71,7 +82,7 @@ public class PlayerInputManager : MonoBehaviour
 
     private void InputUpdate()
     {
-        
+
         if (Input.GetAxis("Vertical") != 0f)
         {
             ApplyEngineVector(Vector3.forward * Input.GetAxis("Vertical"), FrontEngines);
@@ -94,6 +105,14 @@ public class PlayerInputManager : MonoBehaviour
             ApplyEngineVector(Vector3.forward * Input.GetAxis("Steer"), LeftEgnines);
             ApplyEngineVector(Vector3.back * Input.GetAxis("Steer"), RightEngines);
         }
+
+        targetHeight += Input.GetAxis("Ascend");
+        targetHeight = Mathf.Clamp(targetHeight, 0, MaxHeight);
+
+        foreach (EngineLift engine in LiftEngines)
+        {
+            engine.targetHeight = targetHeight;
+        }
     }
     private void ApplyEngineVector(Vector3 vector3, EngineBase[] Engines)
     {
@@ -102,6 +121,8 @@ public class PlayerInputManager : MonoBehaviour
             Engine.GetNewVector(vector3);
             //Debug.Log(vector3);
         }
+
+
     }
 
     private void ThrustEngine()
@@ -110,5 +131,13 @@ public class PlayerInputManager : MonoBehaviour
         {
             engine.ApplyForceVector();
         }
+    }
+
+    private void StabilizeShip()
+    {
+
+        Vector3 predictedUp = Quaternion.AngleAxis(rb.angularVelocity.magnitude * Mathf.Rad2Deg * stability / speed,rb.angularVelocity) * transform.up;
+        Vector3 torqueVector = Vector3.Cross(predictedUp, Vector3.up);
+        rb.AddTorque(torqueVector* speed * speed);
     }
 }

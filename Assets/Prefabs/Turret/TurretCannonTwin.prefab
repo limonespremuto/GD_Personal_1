@@ -176,6 +176,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7531083600368991633}
+  - component: {fileID: 6985513780611479089}
   m_Layer: 0
   m_Name: TurretCannonTwin
   m_TagString: Untagged
@@ -199,6 +200,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6985513780611479089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903593319624233439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f13601387d1971f429d8e54ef067a6f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BDamage: 10
+  BSpeed: 100
+  BDistance: 300
+  Firerate: 2
+  TargetPostion: {x: 0, y: 0, z: 0}
+  ProjectilePrefab: {fileID: 8492216712188384896, guid: 2c4ada3c460ed2b479be3f8e752e783e, type: 3}
+  HorizonaltPivot: {fileID: 8821708059048288872}
+  VerticalPivot: {fileID: 1470060388345213032}
+  bulletSpawnPoint: {fileID: 131977951380250803}
+  ProjectileLayermask:
+    serializedVersion: 2
+    m_Bits: 321
 --- !u!1 &2702993956766094313
 GameObject:
   m_ObjectHideFlags: 0

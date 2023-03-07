@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EngineAux : EngineBase, IEngine
+public class EngineAux : EngineBase, IHealth, IEngine
 {
-
     // Start is called before the first frame update
     void Start()
     {
@@ -14,6 +13,7 @@ public class EngineAux : EngineBase, IEngine
     // Update is called once per frame
     void FixedUpdate()
     {
+
         //ApplyForceVector();
     }
 
@@ -31,6 +31,17 @@ public class EngineAux : EngineBase, IEngine
 
         }
 
+    }
+    void CalculatePowerMP()
+    {
+        CurrentPowerMP = 1f * (componentHealth / maxComponentHealth);
+    }
+    public void TakeDamage(float damage, float ComponentDamage)
+    {
+        componentHealth -= damage;
+        componentHealth = Mathf.Max(0, componentHealth);
+        CalculatePowerMP();
+        gameObject.GetComponentInParent<HealthScript>().TakeDamage(damage, 0);
     }
 
 }

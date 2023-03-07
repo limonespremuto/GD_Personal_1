@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EngineLift : EngineBase, IEngine
+public class EngineLift : EngineBase, IHealth, IEngine
 {
     [HideInInspector] public float EvenPowerMP;
     public float MaxCorrectionDistance;
@@ -11,6 +11,9 @@ public class EngineLift : EngineBase, IEngine
     public float targetHeight;
 
     float COMDistanceMP;
+
+    [SerializeField]
+    bool debugMode = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,12 +32,13 @@ public class EngineLift : EngineBase, IEngine
     {
         if (Vector3.Angle(transform.up, Vector3.up) < CutOffAngle)
         {
-            DesiredVectorThrust = Vector3.up * ThrusterPower * Mathf.Clamp01( CurrentPowerMP  * EvenPowerMP - COMDistanceMP);
+            DesiredVectorThrust = Vector3.up * ThrusterPower * Mathf.Clamp01(EvenPowerMP - COMDistanceMP)*CurrentPowerMP;
 
             rb.AddForceAtPosition(DesiredVectorThrust, transform.position, ForceMode.Force);
             //rb.AddForce(DesiredVectorThrust, ForceMode.Force);
 
-            Debug.DrawRay(transform.position, DesiredVectorThrust / ThrusterPower * 100f, Color.red, Time.deltaTime);
+            if(debugMode)
+                Debug.DrawRay(transform.position, DesiredVectorThrust / ThrusterPower * 100f, Color.red, Time.deltaTime);
             //Debug.Log("Lifting!");
 
         }
@@ -43,12 +47,12 @@ public class EngineLift : EngineBase, IEngine
     void CalculateDeltaToTarget()
     {   
         float COMDistanceDelta;
-        float COMDistanceLocal;
+        //float COMDistanceLocal;
         float COMDistanceTo;
 
-        COMDistanceLocal = transform.localPosition.y - rb.centerOfMass.y;
+        //COMDistanceLocal = transform.position.y - rb.worldCenterOfMass.y;
 
-        COMDistanceTo = transform.position.y - targetHeight /*- rb.worldCenterOfMass.y*/ - COMDistanceLocal;
+        COMDistanceTo = transform.position.y  - targetHeight /*+ COMDistanceLocal - rb.worldCenterOfMass.y*/ ;
 
         //calculates the distance to the center of mass.
         COMDistanceDelta = Mathf.Clamp(COMDistanceTo ,-MaxCorrectionDistance,MaxCorrectionDistance);
@@ -57,8 +61,22 @@ public class EngineLift : EngineBase, IEngine
         //Debug.Log(COMDistanceMP);
     }
 
+    void CalculatePowerMP()
+    {
+        CurrentPowerMP = 1f * (componentHealth / maxComponentHealth);
+    }
+
     new public void GetNewVector(Vector3 inputVector)
     {
         
+    }
+
+    public void TakeDamage(float damage, float ComponentDamage)
+    {
+        componentHealth -= damage;
+        componentHealth = Mathf.Max(0, componentHealth);
+
+        CalculatePowerMP();
+        gameObject.GetComponentInParent<HealthScript>().TakeDamage(damage, 0);
     }
 }

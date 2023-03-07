@@ -9,6 +9,8 @@ public class EngineBase : MonoBehaviour, IEngine
     [Tooltip("The power of the engine at this moment")]
     public float CurrentPowerMP = 1f;
 
+    public float maxComponentHealth = 10f, componentHealth = 10f;
+
     [Header("setup")]
     protected Rigidbody rb;
 

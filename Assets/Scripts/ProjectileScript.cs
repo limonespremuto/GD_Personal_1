@@ -47,10 +47,19 @@ public class ProjectileScript : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit,speed * Time.deltaTime, bulletCheckLayer))
         {
-            IHealth iHealthComponent = hit.transform.GetComponentInParent<IHealth>();
+            IHealth iHealthComponent = hit.collider.GetComponent<IHealth>();
+            Debug.Log(hit.collider.name);
             if (iHealthComponent != null)
             {
                 iHealthComponent.TakeDamage(damage, damage * componentDamageMP);
+            }
+            else
+            {
+                iHealthComponent = hit.transform.GetComponentInParent<IHealth>();
+                if (iHealthComponent != null)
+                {
+                    iHealthComponent.TakeDamage(damage, 0);
+                }
             }
 
             Destroy(gameObject);

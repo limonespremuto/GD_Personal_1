@@ -46,10 +46,12 @@ public class TurretScript : MonoBehaviour
 
     void AimTurret()
     {
-        Vector3 TargetVectorFlat = Vector3.ProjectOnPlane(TargetPostion, transform.up);
+        Vector3 TargetVectorFlat = transform.InverseTransformPoint(TargetPostion);
+        TargetVectorFlat.y = 0f;
+        TargetVectorFlat = transform.TransformPoint(TargetVectorFlat);
         HorizonaltPivot.LookAt(TargetVectorFlat, transform.up);
 
-        TargetVectorFlat = Vector3.ProjectOnPlane(TargetPostion, HorizonaltPivot.right);
+        TargetVectorFlat = TargetPostion;
         VerticalPivot.LookAt(TargetVectorFlat, transform.up);
     }
 

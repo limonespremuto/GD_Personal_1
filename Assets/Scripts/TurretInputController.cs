@@ -56,23 +56,6 @@ public class TurretInputController : MonoBehaviour
         }
     }
 
-    Vector3 CameraRayCast()
-    {
-        Vector3 HitPostion;
-        RaycastHit hit;
-
-        if (Physics.Raycast(PlayerCamera.transform.position, PlayerCamera.transform.forward,out hit, 500f, WorldWhitoutPlayer))
-        {
-            HitPostion = hit.point;
-        }
-        else
-        {
-            HitPostion = PlayerCamera.transform.forward * 800f;
-        }
-        
-        return HitPostion;
-    }
-
     void GiveTurretInput()
     {
         bool FireTurret = false;
@@ -94,5 +77,22 @@ public class TurretInputController : MonoBehaviour
                     turretSc.TryShoot();
             }
         }
+    }
+
+    Vector3 CameraRayCast()
+    {
+        Vector3 HitPostion;
+        RaycastHit hit;
+
+        if (Physics.Raycast(PlayerCamera.transform.position, PlayerCamera.transform.forward,out hit, 500f, WorldWhitoutPlayer))
+        {
+            HitPostion = hit.point;
+        }
+        else
+        {
+            HitPostion = PlayerCamera.transform.position + (PlayerCamera.transform.forward * 800f);
+        }
+        
+        return HitPostion;
     }
 }

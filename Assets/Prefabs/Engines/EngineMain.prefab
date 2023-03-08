@@ -134,7 +134,7 @@ MonoBehaviour:
   maxComponentHealth: 10
   componentHealth: 10
   EvenPowerMP: 0
-  MaxCorrectionDistance: 15
+  MaxCorrectionDistance: 50
   CorrectionPowerMP: 0.2
   CutOffAngle: 45
   targetHeight: 0

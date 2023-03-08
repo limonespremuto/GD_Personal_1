@@ -73,7 +73,7 @@ public class EngineLift : EngineBase, IHealth, IEngine
 
     public void TakeDamage(float damage, float ComponentDamage)
     {
-        componentHealth -= damage;
+        componentHealth -= componentHealth;
         componentHealth = Mathf.Max(0, componentHealth);
 
         CalculatePowerMP();

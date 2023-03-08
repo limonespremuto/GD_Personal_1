@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerInputManager : MonoBehaviour
 {
-    [SerializeField, Tooltip("Internal")]
+    [SerializeField]
     private float targetHeight;
     [SerializeField] private float MaxHeight;
 
@@ -106,7 +106,7 @@ public class PlayerInputManager : MonoBehaviour
             ApplyEngineVector(Vector3.back * Input.GetAxis("Steer"), RightEngines);
         }
 
-        targetHeight += Input.GetAxis("Ascend");
+        targetHeight += Input.GetAxis("Ascend") * 0.1f;
         targetHeight = Mathf.Clamp(targetHeight, 0, MaxHeight);
 
         foreach (EngineLift engine in LiftEngines)

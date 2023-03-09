@@ -133,7 +133,7 @@ MonoBehaviour:
   speed: 50
   lifeTime: 5
   gravity: 9.81
-  gravityMP: 0.3
+  gravityMP: 0.2
   bulletCheckLayer:
     serializedVersion: 2
     m_Bits: 0

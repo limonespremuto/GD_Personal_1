@@ -546,7 +546,7 @@ GameObject:
   - component: {fileID: 6861659842308890453}
   - component: {fileID: 8123478012892759748}
   m_Layer: 0
-  m_Name: TurretCannonSingle
+  m_Name: TC1Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -580,10 +580,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f13601387d1971f429d8e54ef067a6f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BDamage: 12.5
-  BSpeed: 250
-  BDistance: 340
-  Firerate: 3
+  BDamage: 10
+  BSpeed: 80
+  BDistance: 300
+  Firerate: 2
   TargetPostion: {x: 0, y: 0, z: 0}
   ProjectilePrefab: {fileID: 8492216712188384896, guid: 2c4ada3c460ed2b479be3f8e752e783e, type: 3}
   HorizonaltPivot: {fileID: 7167520090491134497}

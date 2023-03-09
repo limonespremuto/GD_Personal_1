@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class TurretInputController : MonoBehaviour
 {
+    public enum ControllerType
+    {
+        Player,
+        Enemy
+    }
+
+    [SerializeField]
+    private ControllerType controllerType = ControllerType.Player;
+
     [SerializeField] Camera PlayerCamera;
     
 
@@ -21,10 +30,12 @@ public class TurretInputController : MonoBehaviour
     [SerializeField]
     private bool debugMode = false;
 
+    [SerializeField]
+    private Cinemachine.CinemachineFreeLook MainCamera;
+
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Confined;
         PlayerCamera = Camera.main;
         GetTurrets();
     }
@@ -32,7 +43,10 @@ public class TurretInputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GiveTurretInput();
+        if (controllerType == ControllerType.Player)
+        {
+            CameraControlls();
+        }
     }
 
     private void OnDrawGizmos()
@@ -56,10 +70,10 @@ public class TurretInputController : MonoBehaviour
         }
     }
 
-    void GiveTurretInput()
+    public void GiveTurretInput(bool boolInput, Vector3 targetVector)
     {
-        bool FireTurret = false;
-        if (Input.GetKey(KeyCode.Mouse0))
+        bool FireTurret;
+        if (boolInput)
         {
             FireTurret = true;
         }
@@ -72,14 +86,14 @@ public class TurretInputController : MonoBehaviour
             TurretScript turretSc = turret;
             if (turretSc != null)
             {
-                turretSc.TargetPostion = CameraRayCast();
+                turretSc.TargetPostion = targetVector;
                 if (FireTurret)
                     turretSc.TryShoot();
             }
         }
     }
 
-    Vector3 CameraRayCast()
+    public Vector3 CameraRayCast()
     {
         Vector3 HitPostion;
         RaycastHit hit;
@@ -94,5 +108,17 @@ public class TurretInputController : MonoBehaviour
         }
         
         return HitPostion;
+    }
+
+    void CameraControlls()
+    {
+        if (Input.GetKey(KeyCode.Mouse1))
+        {
+            MainCamera.m_Lens.FieldOfView = 40f / 2f;
+        }
+        else
+        {
+            MainCamera.m_Lens.FieldOfView = 40f;
+        }
     }
 }

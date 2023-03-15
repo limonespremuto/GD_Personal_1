@@ -362,7 +362,7 @@ public class ShipController : MonoBehaviour, IHealth
         currentBoost = Mathf.Clamp(currentBoost, 0f, boostCapacity);
         boostCooldown -= Time.deltaTime;
         if (useUImanager)
-            uiManager.UpdateBostSlider(currentBoost / boostCapacity);
+            uiManager.UpdateBoostSlider(currentBoost / boostCapacity);
         return isBoosting;
     }
 
@@ -390,6 +390,7 @@ public class ShipController : MonoBehaviour, IHealth
                     {
                         condition.Condition();
                     }
+                    UIManager.Instance.UpdateStateInt(3);
                 }
                 controllerType = ControllerType.Destroyed;
             }

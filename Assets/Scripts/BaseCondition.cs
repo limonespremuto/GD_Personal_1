@@ -43,7 +43,7 @@ public class BaseCondition : MonoBehaviour, ICondition
             case ConditionType.LevelEnd:
                 {
                     shipController.controllerType = ShipController.ControllerType.None;
-                    uIManager.updateState(UIManager.UIState.Victory);
+                    uIManager.UpdateState(UIManager.UIState.Victory);
                     break;
                 }
         }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -21,16 +22,24 @@ public class UIManager : MonoBehaviour
     public Text textUIHeight;
     public UnityEngine.UI.Slider sliderUIBoost;
 
+    public GameObject uiPauseGO;
+    public GameObject uiGameOverGO;
+    public GameObject uiVictoryGO;
+
     [SerializeField]
     private GameObject cineMachineGO;
 
+    //[SerializeField]
+    //private string mainMenuSceneName;
+    //[SerializeField]
+    //private string levelSceneName;
     void Awake()
     {
         if (Instance != null)
         {
             Debug.Log("Multiple UI Manager exist in scene");
         }
-        UIManager.Instance = this;
+        Instance = this;
     }
 
 
@@ -38,45 +47,79 @@ public class UIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        UpdateState(uIState = UIState.Playng);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && uIState != UIState.Defeat)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            updateState(UIState.Paused);
+            if (uIState != UIState.Defeat || uIState != UIState.Victory)
+                UpdateState(UIState.Paused);
         }
     }
 
-    public void updateState(UIState newState)
+    public void UpdateStateInt(int i)
+    {
+        if (i == 0)
+        {
+            UpdateState(UIState.Playng);
+        }
+        if (i == 1)
+        {
+            UpdateState(UIState.Paused);
+        }
+        if (i == 2)
+        {
+            UpdateState(UIState.Defeat);
+        }
+        if (i == 3)
+        {
+            UpdateState(UIState.Victory);
+        }
+    }
+
+    public void UpdateState(UIState newState)
     {
         uIState = newState;
         switch (uIState)
         {
             case UIState.Playng:
                 {
-                    //Time.timeScale = 1f;
+                    uiPauseGO.SetActive(false);
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Time.timeScale = 1f;
                     break;
                 }
             case UIState.Paused:
                 {
-                    //Time.timeScale = 0f;
+                    uiPauseGO.SetActive(true);
+                    Cursor.lockState = CursorLockMode.Confined;
+                    Time.timeScale = 0f;
                     break;
                 }
             case UIState.Defeat:
                 {
+                    uiGameOverGO.SetActive(true);
+                    Cursor.lockState = CursorLockMode.Confined;
+                    Time.timeScale = 0.1f;
                     break;
                 }
             case UIState.Victory:
                 {
-                    Debug.Log("you win");
-                    Application.Quit();
+                    Cursor.lockState = CursorLockMode.Confined;
+                    uiVictoryGO.SetActive(true);
+                    Time.timeScale = 0.1f;
+                    //LoadScene(mainMenuSceneName);
+                    //Debug.Log("you win");
+                    //Application.Quit();
                     break;
                 }
         }
     }
+
+    #region ShipUI
     public void UpdateHealth(float health, float maxHealth)
     {
         textUIHealth.text = health + " / " + maxHealth + " HP";
@@ -92,8 +135,19 @@ public class UIManager : MonoBehaviour
         textUIHeight.text = height + " (" + TargetHeight + ") Height";
     }
 
-    public void UpdateBostSlider(float ValuePercent)
+    public void UpdateBoostSlider(float ValuePercent)
     {
         sliderUIBoost.value = ValuePercent;
+    }
+    #endregion
+
+    public void LoadScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
+    public void QuitApplication()
+    {
+        Application.Quit();
     }
 }

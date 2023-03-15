@@ -29,7 +29,7 @@ public class TurretScript : MonoBehaviour
     private Transform bulletSpawnPoint;
 
     [SerializeField]
-    LayerMask ProjectileLayermask;
+    public LayerMask ProjectileLayermask;
     
     // Start is called before the first frame update
     void Start()
@@ -41,10 +41,10 @@ public class TurretScript : MonoBehaviour
     void Update()
     {
         cooldownTime -= Time.deltaTime;
-        AimTurret();
+
     }
 
-    void AimTurret()
+    public void AimTurret()
     {
         Vector3 TargetVectorFlat = transform.InverseTransformPoint(TargetPostion);
         TargetVectorFlat.y = 0f;

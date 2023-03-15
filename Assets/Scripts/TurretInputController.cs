@@ -22,10 +22,7 @@ public class TurretInputController : MonoBehaviour
     private List<TurretScript> turrets;
 
     [SerializeField]
-    LayerMask WorldWhitoutPlayer;
-
-    [SerializeField]
-    LayerMask EnemyLayer;
+    LayerMask projectileLayer;
 
     [SerializeField]
     private bool debugMode = false;
@@ -65,6 +62,7 @@ public class TurretInputController : MonoBehaviour
             TurretScript turretToAdd = Turret.GetComponentInChildren<TurretScript>();
             if (turretToAdd != null)
             {
+                turretToAdd.ProjectileLayermask = projectileLayer;
                 turrets.Add(turretToAdd);
             }
         }
@@ -86,6 +84,7 @@ public class TurretInputController : MonoBehaviour
             TurretScript turretSc = turret;
             if (turretSc != null)
             {
+                turretSc.AimTurret();
                 turretSc.TargetPostion = targetVector;
                 if (FireTurret)
                     turretSc.TryShoot();
@@ -98,7 +97,7 @@ public class TurretInputController : MonoBehaviour
         Vector3 HitPostion;
         RaycastHit hit;
 
-        if (Physics.Raycast(PlayerCamera.transform.position, PlayerCamera.transform.forward,out hit, 500f, WorldWhitoutPlayer))
+        if (Physics.Raycast(PlayerCamera.transform.position, PlayerCamera.transform.forward,out hit, 500f, projectileLayer))
         {
             HitPostion = hit.point;
         }

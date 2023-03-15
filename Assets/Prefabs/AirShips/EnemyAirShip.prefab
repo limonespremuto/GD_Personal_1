@@ -8,6 +8,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -7102030603344988003, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
+      propertyPath: agroRange
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: -7102030603344988003, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
+      propertyPath: maxHealth
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: -7102030603344988003, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
+      propertyPath: controllerType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7102030603344988003, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
       propertyPath: stabilityPowerMP
       value: 3
       objectReference: {fileID: 0}
@@ -19,6 +31,10 @@ PrefabInstance:
       propertyPath: ProjectileLayermask.m_Bits
       value: 193
       objectReference: {fileID: 0}
+    - target: {fileID: 1435422674243928289, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ae1ebb887a46d5a449110b8cdbf29b31, type: 2}
     - target: {fileID: 2979403344293173228, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
       propertyPath: ProjectileLayermask.m_Bits
       value: 193
@@ -26,6 +42,10 @@ PrefabInstance:
     - target: {fileID: 4863622025073659221, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
       propertyPath: EnemyLayer.m_Bits
       value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 4863622025073659221, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
+      propertyPath: projectileLayer.m_Bits
+      value: 193
       objectReference: {fileID: 0}
     - target: {fileID: 4863622025073659221, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
       propertyPath: WorldWhitoutPlayer.m_Bits
@@ -127,6 +147,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.017712293
       objectReference: {fileID: 0}
+    - target: {fileID: 7992893954977458107, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
+      propertyPath: torquePower
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 8169492610986729152, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
       propertyPath: m_Name
       value: EnemyAirShip
@@ -174,6 +198,18 @@ PrefabInstance:
     - target: {fileID: 8796671994196821114, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8800361496110368344, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
+      propertyPath: torquePower
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8800361496171002889, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
+      propertyPath: torquePower
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8800361497141901216, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}
+      propertyPath: torquePower
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8453ca3c7060e8488630e8cccb85c0f, type: 3}

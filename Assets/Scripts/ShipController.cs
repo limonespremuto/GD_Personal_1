@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ShipController : MonoBehaviour
+public class ShipController : MonoBehaviour, IHealth
 {
     public ControllerType controllerType = ControllerType.None;
     public enum ControllerType
@@ -12,6 +10,20 @@ public class ShipController : MonoBehaviour
         None,
         Destroyed
     }
+
+    [Header("Health and damage")]
+    
+    [SerializeField]
+    private float maxHealth = 300f, health;
+
+    [SerializeField]
+    private bool isInvincible;
+
+    [SerializeField]
+    private float collisionMinSpeed;
+
+    [SerializeField]
+    private float collisionDamageMP;
 
     [SerializeField, Range(1f, 4f)]
     private float boostMP = 1.5f;
@@ -36,7 +48,7 @@ public class ShipController : MonoBehaviour
 
 
     public Engine[] AllEngines;
-    
+
     float liftPower = 0f;
     float forwardPower = 0f;
     float backPower = 0f;
@@ -47,31 +59,49 @@ public class ShipController : MonoBehaviour
     float RequiredPower;
 
     [Header("Setup")]
-    [SerializeField] 
+    [SerializeField]
     Rigidbody rb;
-    [SerializeField] 
+    [SerializeField]
     Transform CenterOfMass;
     [SerializeField]
     TurretInputController turretController;
-
+    [SerializeField]
+    UIManager uiManager;
+    bool useUImanager = false;
+    
+    [SerializeField]
+    public BaseCondition[] deathConditions;
 
     [Header("Enemy only")]
     public Transform currentTarget;
-    public float agroRange = 50f;
-    public float stopRange = 300f;
+    public float agroRange = 300f;
+    public float stopRange = 50f;
+    [SerializeField]
+    LayerMask worldLayer;
     private void Awake()
     {
-        rb.centerOfMass = CenterOfMass.position;
+        health = maxHealth;
+        rb.centerOfMass = CenterOfMass.localPosition;
         targetHeight = CenterOfMass.position.y;
         RecalculateEnginePower();
+        //A failsafe for the UI manager its helps
+        if (controllerType == ControllerType.Player)
+        {
+            //Debug.Log("UIManager not set but supposed to be used");
+            useUImanager = true;
+        }
 
         if (controllerType == ControllerType.Player)
         {
-
             Cursor.lockState = CursorLockMode.Locked;
         }
     }
 
+    private void Start()
+    {
+        if (useUImanager)
+            uiManager.UpdateHealth(Mathf.Round(health), maxHealth);
+    }
     private void Update()
     {
         if (controllerType == ControllerType.Player)
@@ -83,9 +113,47 @@ public class ShipController : MonoBehaviour
     private void FixedUpdate()
     {
         InputUpdate();
-
+        if (useUImanager)
+            uiManager.UpdateSpeed(Mathf.Round(10 * rb.velocity.magnitude) / 10);
     }
 
+    private void OnCollisionEnter(Collision collider)
+    {
+        //Debug.Log("there has been a collision whit " + collision.transform.root.name);
+        Rigidbody rb = transform.GetComponentInParent<Rigidbody>();
+        //Debug.Log("the Speed of the colliding ship is " + rb.velocity.magnitude);
+        if (rb != null)
+        {
+            Rigidbody otherRB = collider.collider.GetComponentInParent<Rigidbody>();
+
+            float damageTaken = 0f;
+
+            if (otherRB != null)
+            {
+                if ((rb.velocity - otherRB.velocity).magnitude >= collisionMinSpeed)
+                {
+                    damageTaken = (rb.velocity - otherRB.velocity).magnitude - collisionMinSpeed;
+                    damageTaken = damageTaken * collisionDamageMP;
+                    TakeDamage(damageTaken / 2f, 0);
+
+                    IHealth otherIhealt = collider.transform.GetComponentInParent<IHealth>();
+                    if (otherIhealt != null)
+                    {
+                        otherIhealt.TakeDamage(damageTaken / 2f, 0);
+                    }
+                }
+            }
+            else
+            {
+                if (rb.velocity.magnitude >= collisionMinSpeed)
+                {
+                    damageTaken = rb.velocity.magnitude - collisionMinSpeed;
+                    damageTaken = damageTaken * collisionDamageMP;
+                    TakeDamage(damageTaken, 0);
+                }
+            }
+        }
+    }
 
     private void InputUpdate()
     {
@@ -141,6 +209,8 @@ public class ShipController : MonoBehaviour
                     liftPower = beforeOverHeat;
 
                     targetHeight += Input.GetAxis("Ascend") * 0.2f;
+                    if (useUImanager)
+                        uiManager.UpdateTargetHehight(Mathf.Round(transform.position.y * 10f) / 10f, Mathf.Round(targetHeight * 10f) / 10f);
                     StabilizeShip();
                     break;
                 }
@@ -148,13 +218,52 @@ public class ShipController : MonoBehaviour
                 {
                     if (Vector3.Distance(currentTarget.position, transform.position) <= agroRange)
                     {
+                        if (Vector3.Distance(currentTarget.position, transform.position) >= stopRange)
+                        {
+                            thrustVector = Vector3.forward * forwardPower;
+                        }
+                        else
+                        {
+
+                        }
+
+                        float angleOfTarget;
+                        Vector3 flatTransformPos;
+                        Vector3 flatTargetPos;
+
+                        flatTransformPos = new Vector3(transform.position.x, 0, transform.position.z);
+                        flatTargetPos = new Vector3(currentTarget.position.x, 0, currentTarget.position.z);
+                        if (transform.InverseTransformDirection(flatTargetPos).x < 0)
+                        {
+                            angleOfTarget = -Vector3.Angle(flatTransformPos, flatTargetPos);
+                        }
+                        else
+                        {
+                            angleOfTarget = Vector3.Angle(flatTransformPos, flatTargetPos);
+                        }
+
+                        targetHeight = currentTarget.position.y;
                         turretController.GiveTurretInput(true, currentTarget.position);
+                        rb.AddTorque(Vector3.up * angleOfTarget / 180f * torquePower * 10f,ForceMode.Force);
                     }
                     else
                     {
                         turretController.GiveTurretInput(false,(transform.forward * 2000f) + transform.position);
                     }
+                    RaycastHit hit;
+                    if (Physics.Raycast(transform.position, Vector3.down,out hit, 30f, worldLayer))
+                    {
+                        targetHeight = hit.point.y + 30f;
+                        if (currentTarget.position.y >= transform.position.y)
+                        {
+                            targetHeight = currentTarget.position.y;
+                        }
+                    }
+
+
                     thrustVector.y = CalculateRequiredPower();
+
+                    
                     StabilizeShip();
                     break;
                 }
@@ -204,6 +313,7 @@ public class ShipController : MonoBehaviour
 
         RequiredPower = Mathf.Clamp(RequiredPower, 0f, liftPower);
     }
+
     float CalculateRequiredPower()
     {
         float VerticalPower;
@@ -251,12 +361,57 @@ public class ShipController : MonoBehaviour
         }
         currentBoost = Mathf.Clamp(currentBoost, 0f, boostCapacity);
         boostCooldown -= Time.deltaTime;
+        if (useUImanager)
+            uiManager.UpdateBostSlider(currentBoost / boostCapacity);
         return isBoosting;
     }
+
     private void StabilizeShip()
     {
         Vector3 predictedUp = Quaternion.AngleAxis(rb.angularVelocity.magnitude * Mathf.Rad2Deg * stability / stabilityPowerMP,rb.angularVelocity) * transform.up;
         Vector3 torqueVector = Vector3.Cross(predictedUp, Vector3.up);
         rb.AddTorque(torqueVector * StabilityPower * stabilityPowerMP);
     }
+
+    public void TakeDamage(float damage, float ComponentDamage)
+    {
+        health -= damage;
+        if (health <= 0f)
+        {
+            if (isInvincible)
+            {
+                Debug.Log("You are dead " + transform.name);
+            }
+            else
+            {
+                if (controllerType == ControllerType.Player)
+                {
+                    foreach (ICondition condition in deathConditions)
+                    {
+                        condition.Condition();
+                    }
+                }
+                controllerType = ControllerType.Destroyed;
+            }
+        }
+
+        health = Mathf.Clamp(health, 0f, maxHealth);
+
+        if (useUImanager)
+            uiManager.UpdateHealth(Mathf.Round(health), maxHealth);
+
+    }
+    private void OnDrawGizmosSelected()
+    {
+        if (controllerType == ControllerType.Enemy)
+        {
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireSphere(transform.position, agroRange);
+
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(transform.position, currentTarget.position);
+        }
+    }
+
+
 }

@@ -40,7 +40,7 @@ public class HealthScript : MonoBehaviour, IHealth
             {
                 if (shipController != null)
                 {
-                    shipController.controllerType = ShipController.ControllerType.Destroyed;
+                    //shipController.controllerType = ShipController.ControllerType.Destroyed;
                 }
                 Debug.Log("You are dead " + transform.name);
             }
@@ -56,14 +56,15 @@ public class HealthScript : MonoBehaviour, IHealth
         health = Mathf.Clamp(health, 0f, MaxHealth);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    
+    private void  OnCollisionEnter(Collision otherCollidingShip)
     {
         //Debug.Log("there has been a collision whit " + collision.transform.root.name);
         Rigidbody rb = transform.GetComponentInParent<Rigidbody>();
         //Debug.Log("the Speed of the colliding ship is " + rb.velocity.magnitude);
         if (rb != null)
         {
-            Rigidbody otherRB = collision.collider.GetComponentInParent<Rigidbody>();
+            Rigidbody otherRB = otherCollidingShip.collider.GetComponentInParent<Rigidbody>();
             
             float damageTaken = 0f;
 
@@ -75,7 +76,7 @@ public class HealthScript : MonoBehaviour, IHealth
                     damageTaken = damageTaken * collisionDamageMP;
                     TakeDamage(damageTaken / 2f, 0);
 
-                    IHealth otherIhealt = collision.transform.GetComponentInParent<IHealth>();
+                    IHealth otherIhealt = otherCollidingShip.transform.GetComponentInParent<IHealth>();
                     if (otherIhealt != null)
                     {
                         otherIhealt.TakeDamage(damageTaken / 2f, 0);

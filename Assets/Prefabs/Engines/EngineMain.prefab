@@ -144,12 +144,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   liftPower: 7.5
-  forwardPower: 0
+  forwardPower: 1
   backPower: 0
   rightPower: 0
   leftPower: 0
   torquePower: 1
   StabilityPower: 3
   PowerMP: 1
-  maxComponentHealth: 10
-  componentHealth: 10
+  maxComponentHealth: 75
+  componentHealth: 75
